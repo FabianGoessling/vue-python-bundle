@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+  </head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <mycomponent>
+
+      </mycomponent>
+    </v-app>
+  </div>
+</body>
+
+
+<script>
+  let v
+
+  // Function for loading all components
+  async function getComponents() {
+    let res = await axios.get("/test")
+    return res
+  }
+
+  // Load all components, instantiate components and setup the Vue instance
+  response = getComponents().then((response) => (
+    console.log(response.data.components),
+    response.data.components.forEach(function (element) {
+      Vue.component(element.name,
+        {
+          props: eval(element.props),
+          data: eval(element.data),
+          template: element.template,
+          style: []
+        }
+      )
+    })))
+    .finally(() => (
+      v = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: {}
+      })
+
+    ))
+</script>
+
+</html>
